@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prueba Timeline.js</title>
+    <link rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #timeline-embed {
+            width: 100%;
+            height: 70vh;
+        }
+    </style>
+</head>
+<body>
+    <h1>Prueba de Timeline.js</h1>
+    <div id="timeline-embed"></div>
+
+    <script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
+
+    <script>
+        // Datos básicos para probar Timeline.js
+        const data = {
+            timeline: {
+                title: { text: { headline: "Eventos Históricos" }},
+                events: [
+                    {
+                        media: {
+                            url: "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a3/Flag_of_the_United_States.svg/1920px-Flag_of_the_United_States.svg.png"
+                        },
+                        start_date: { year: "1776" },
+                        text: {
+                            headline: "Independencia de los Estados Unidos",
+                            text: "El 4 de julio de 1776, las trece colonias declararon su independencia."
+                        },
+                        unique_id: "event1",
+                        location: { name: "Philadelphia", lat: 39.9526, lon: -75.1652 }
+                    },
+                    {
+                        media: {
+                            url: "https://upload.wikimedia.org/wikipedia/commons/thumb/f/fd/Monarch_butterfly_Danaus_plexippus_John_Fowler.jpg/1920px-Monarch_butterfly_Danaus_plexippus_John_Fowler.jpg"
+                        },
+                        start_date: { year: "1492" },
+                        text: {
+                            headline: "Descubrimiento de América",
+                            text: "Cristóbal Colón llega a América el 12 de octubre de 1492."
+                        },
+                        unique_id: "event2",
+                        location: { name: "San Salvador", lat: 24.256, lon: -75.083 }
+                    }
+                ]
+            }
+        };
+
+        // Cargar Timeline.js
+        const timeline = new TL.Timeline('timeline-embed', data.timeline, { initial_zoom: 2 });
+
+        // Evento para detectar cuando cambia la selección en Timeline.js
+        timeline.on('changed', function(event) {
+            console.log("Evento timeline seleccionado:", event);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Timeline & StoryMap Sincronizados</title>
+    <link rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
+    <link rel="stylesheet" href="https://cdn.knightlab.com/libs/storymapjs/latest/css/storymap.css">
+    <style>
+        body { font-family: Arial, sans-serif; }
+        #timeline-embed, #storymap-embed {
+            width: 100%;
+            height: 50vh;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sincronización Interactiva en Timeline.js y StoryMap.js</h1>
+
+    <div id="timeline-embed"></div>
+    <div id="storymap-embed"></div>
+
+    <!-- Cargamos los scripts después del contenido -->
+    <script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
+    <script src="https://cdn.knightlab.com/libs/storymapjs/latest/js/storymap.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log("Documento completamente cargado.");
+
+            // Datos compartidos para Timeline.js y StoryMap.js
+            const data = {
+                timeline: {
+                    title: { text: { headline: "Eventos Históricos" }},
+                    events: [
+                        {
+                            media: { url: "https://example.com/image1.jpg" },
+                            start_date: { year: "1776" },
+                            text: {
+                                headline: "Independencia de los Estados Unidos",
+                                text: "El 4 de julio de 1776, las trece colonias declararon su independencia."
+                            },
+                            unique_id: "event1",
+                            location: { name: "Philadelphia", lat: 39.9526, lon: -75.1652 }
+                        },
+                        {
+                            media: { url: "https://example.com/image2.jpg" },
+                            start_date: { year: "1492" },
+                            text: {
+                                headline: "Descubrimiento de América",
+                                text: "Cristóbal Colón llega a América el 12 de octubre de 1492."
+                            },
+                            unique_id: "event2",
+                            location: { name: "San Salvador", lat: 24.256, lon: -75.083 }
+                        }
+                    ]
+                },
+                storymap: {
+                    storymap: {
+                        slides: [
+                            {
+                                type: "overview",
+                                text: {
+                                    headline: "Eventos Históricos",
+                                    text: "Explora los eventos históricos clave en el tiempo y espacio."
+                                }
+                            },
+                            {
+                                location: { lat: 39.9526, lon: -75.1652, zoom: 10 },
+                                text: {
+                                    headline: "Independencia de los Estados Unidos",
+                                    text: "El 4 de julio de 1776, las trece colonias declararon su independencia."
+                                },
+                                media: { url: "https://example.com/image1.jpg" }
+                            },
+                            {
+                                location: { lat: 24.256, lon: -75.083, zoom: 10 },
+                                text: {
+                                    headline: "Descubrimiento de América",
+                                    text: "Cristóbal Colón llega a América el 12 de octubre de 1492."
+                                },
+                                media: { url: "https://example.com/image2.jpg" }
+                            }
+                        ]
+                    }
+                }
+            };
+
+            // Inicializar Timeline
+            const timeline = new TL.Timeline('timeline-embed', data.timeline);
+
+            // Inicializar StoryMap
+            const storymap = new VCO.StoryMap('storymap-embed', data.storymap);
+
+            // Función para sincronizar StoryMap desde Timeline
+            function syncStoryMap(unique_id) {
+                const eventIndex = data.timeline.events.findIndex(event => event.unique_id === unique_id);
+                const slideIndex = eventIndex + 1; // Ajuste por el slide de introducción en StoryMap
+                if (slideIndex > 0) {
+                    console.log("Sincronizando StoryMap al slide:", slideIndex);
+                    storymap.goTo(slideIndex);
+                   // storymap.setSlide(slideIndex);  // Usamos setSlide en lugar de goToSlide
+                }
+            }
+
+            // Usar MutationObserver para detectar cuándo se añaden los eventos al DOM
+            const timelineContainer = document.querySelector('#timeline-embed');
+
+            const observer = new MutationObserver(function(mutationsList) {
+                mutationsList.forEach(function(mutation) {
+                    if (mutation.addedNodes.length > 0) {
+                        // Buscar todos los elementos de la línea de tiempo que representan eventos
+                        const timelineEvents = document.querySelectorAll('.tl-timemarker-content');
+                        
+                        if (timelineEvents.length > 0) {
+                            console.log("Eventos de la Timeline encontrados:", timelineEvents);
+
+                            timelineEvents.forEach(function(eventElement, index) {
+                                eventElement.addEventListener('click', function() {
+                                    const unique_id = data.timeline.events[index].unique_id;
+                                    console.log("Evento clicado en Timeline:", unique_id);
+
+                                    // Sincronizar con StoryMap usando el unique_id del evento
+                                    syncStoryMap(unique_id);
+                                });
+                            });
+
+                            console.log("Listeners de eventos de Timeline añadidos.");
+                        }
+                    }
+                });
+            });
+
+            observer.observe(timelineContainer, { childList: true, subtree: true });
+
+            // Evento para capturar cuando se cambia de slide en StoryMap
+            storymap.on('slidechanged', function(e) {
+                const slideIndex = e.index;
+                const eventIndex = slideIndex - 1; // Ajuste por el slide de introducción en StoryMap
+                if (eventIndex >= 0) {
+                    const unique_id = data.timeline.events[eventIndex].unique_id;
+                    console.log("Sincronizando Timeline al evento:", unique_id);
+                    timeline.goToId(unique_id);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
