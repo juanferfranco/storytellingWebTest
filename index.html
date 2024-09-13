@@ -1,176 +1,218 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Timeline & StoryMap Sincronizados</title>
-    <link rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
-    <link rel="stylesheet" href="https://cdn.knightlab.com/libs/storymapjs/latest/css/storymap.css">
-    <style>
-        body { font-family: Arial, sans-serif; }
-        #timeline-embed, #storymap-embed {
-            width: 100%;
-            height: 50vh;
-            margin-bottom: 20px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Timeline y StoryMap Sincronizados</title>
+  <!-- Incluir estilos y scripts aquí -->
+  <style>
+    #timeline-embed, #storymap {
+      margin-bottom: 20px;
+    }
+  </style>
 </head>
 <body>
-    <h1>Sincronización Interactiva en Timeline.js y StoryMap.js</h1>
+  <div id="timeline-embed" style="width: 100%; height: 500px;"></div>
+  <div id="storymap" style="width: 100%; height: 500px;"></div>
 
-    <div id="timeline-embed"></div>
-    <div id="storymap-embed"></div>
+  <!-- Incluir scripts aquí -->
+  <script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
+  <link rel="stylesheet" href="https://cdn.knightlab.com/libs/timeline3/latest/css/timeline.css">
+  <script src="https://cdn.knightlab.com/libs/storymapjs/latest/js/storymap-min.js"></script>
+  <link rel="stylesheet" href="https://cdn.knightlab.com/libs/storymapjs/latest/css/storymap.css">
 
-    <!-- Cargamos los scripts después del contenido -->
-    <script src="https://cdn.knightlab.com/libs/timeline3/latest/js/timeline.js"></script>
-    <script src="https://cdn.knightlab.com/libs/storymapjs/latest/js/storymap.js"></script>
+  <script>
+    // Tus datos de eventos para TimelineJS
+    var eventsData = {
+      "events": [
+      {
+          "unique_id": "event1",
+          "start_date": {
+            "year": 2024,
+            "month": 9,
+            "day": 15
+          },
+          "end_date": {
+            "year": 2024,
+            "month": 9,
+            "day": 20
+          },
+          "text": {
+            "headline": "Exposición de Arte Contemporáneo",
+            "text": "Una exposición de artistas emergentes que presentan sus obras de arte contemporáneo."
+          },
+          "media": {
+            "url": "https://example.com/event2_image.jpg"
+          },
+          "location": {
+            "latitude": 48.8566,
+            "longitude": 2.3522
+          }
+        },
+        {
+          "unique_id": "event2",
+          "start_date": {
+            "year": 2024,
+            "month": 10,
+            "day": 1
+          },
+          "end_date": {
+            "year": 2024,
+            "month": 10,
+            "day": 2
+          },
+          "text": {
+            "headline": "Conferencia sobre Energía Sostenible",
+            "text": "Una conferencia internacional sobre el futuro de las energías renovables y la sostenibilidad."
+          },
+          "media": {
+            "url": "https://example.com/event1_image.jpg"
+          },
+          "location": {
+            "latitude": 40.7128,
+            "longitude": -74.0060
+          }
+        },
+        {
+          "unique_id": "event3",
+          "start_date": {
+            "year": 2024,
+            "month": 11,
+            "day": 5
+          },
+          "end_date": {
+            "year": 2024,
+            "month": 11,
+            "day": 7
+          },
+          "text": {
+            "headline": "Feria Tecnológica Anual",
+            "text": "La feria tecnológica más grande del país, donde se presentan las últimas innovaciones en tecnología."
+          },
+          "media": {
+            "url": "https://example.com/event3_image.jpg"
+          },
+          "location": {
+            "latitude": 37.7749,
+            "longitude": -122.4194
+          }
+        },
+        {
+          "unique_id": "event4",
+          "start_date": {
+            "year": 2024,
+            "month": 12,
+            "day": 12
+          },
+          "end_date": {
+            "year": 2024,
+            "month": 12,
+            "day": 15
+          },
+          "text": {
+            "headline": "Festival Internacional de Música",
+            "text": "Festival de música con artistas internacionales de diversos géneros."
+          },
+          "media": {
+            "url": "https://example.com/event4_image.jpg"
+          },
+          "location": {
+            "latitude": 34.0522,
+            "longitude": -118.2437
+          }
+        }
+      ]
+    };
 
-    <script>
-        let listenersAdded = false;
-        let counter = 0;
-
-        document.addEventListener('DOMContentLoaded', function() {
-            if (!listenersAdded) {
-
-                console.log("Documento completamente cargado.");
-
-                // Datos compartidos para Timeline.js y StoryMap.js
-                const data = {
-                    timeline: {
-                        title: { text: { headline: "Eventos Históricos" }},
-                        events: [
-                            {
-                                media: { url: "https://example.com/image2.jpg" },
-                                start_date: { year: "1492" },
-                                text: {
-                                    headline: "Descubrimiento de América",
-                                    text: "Cristóbal Colón llega a América el 12 de octubre de 1492."
-                                },
-                                unique_id: "event1",
-                                location: { name: "San Salvador", lat: 24.256, lon: -75.083 }
-                            },
-                            {
-                                media: { url: "https://example.com/image1.jpg" },
-                                start_date: { year: "1776" },
-                                text: {
-                                    headline: "Independencia de los Estados Unidos",
-                                    text: "El 4 de julio de 1776, las trece colonias declararon su independencia."
-                                },
-                                unique_id: "event2",
-                                location: { name: "Philadelphia", lat: 39.9526, lon: -75.1652 }
-                            }
-                        ]
-                    },
-                    storymap: {
-                        storymap: {
-                            slides: [
-                                {
-                                    type: "overview",
-                                    text: {
-                                        headline: "Eventos Históricos",
-                                        text: "Explora los eventos históricos clave en el tiempo y espacio."
-                                    }
-                                },
-                                {
-                                    location: { lat: 24.256, lon: -75.083, zoom: 10 },
-                                    text: {
-                                        headline: "Descubrimiento de América",
-                                        text: "Cristóbal Colón llega a América el 12 de octubre de 1492."
-                                    },
-                                    media: { url: "https://example.com/image2.jpg" }
-                                },
-                                {
-                                    location: { lat: 39.9526, lon: -75.1652, zoom: 10 },
-                                    text: {
-                                        headline: "Independencia de los Estados Unidos",
-                                        text: "El 4 de julio de 1776, las trece colonias declararon su independencia."
-                                    },
-                                    media: { url: "https://example.com/image1.jpg" }
-                                }
-                            ]
-                        }
-                    }
-                };
-
-                // Inicializar Timeline
-                const timeline = new TL.Timeline('timeline-embed', data.timeline);
-
-                // Inicializar StoryMap
-                const storymap = new VCO.StoryMap('storymap-embed', data.storymap);
-
-                // Función para sincronizar StoryMap desde Timeline
-                function syncStoryMap(unique_id) {
-                    const eventIndex = data.timeline.events.findIndex(event => event.unique_id === unique_id);
-                    const slideIndex = eventIndex + 1; // Ajuste por el slide de introducción en StoryMap
-                    if (slideIndex > 0) {
-                        console.log("Sincronizando StoryMap al slide:", slideIndex);
-                        storymap.goTo(slideIndex);
-                    }
-                }
-
-                // Usar MutationObserver para detectar cuándo se añaden los eventos al DOM
-                const timelineContainer = document.querySelector('#timeline-embed');
-
-                const observer = new MutationObserver(function(mutationsList, observerInstance) {
-                    mutationsList.forEach(function(mutation) {
-                        console.log("Mutación detectada:", mutation);
-                        counter = counter + 1;
-                        if (mutation.addedNodes.length > 0) {
-                            mutation.addedNodes.forEach(node => {
-                                console.log("Nodo añadido:", node);
-                                if (node.classList && node.classList.contains('tl-timemarker-content')) {
-                                    // Aquí es donde el código interactúa con los eventos de la línea de tiempo.
-                                    console.log("Nodo .tl-timemarker-content encontrado:", node);
-                                }
-                            });
-                        }
-                    });
-
-                    // Buscar todos los elementos de la línea de tiempo que representan eventos
-                    const timelineEvents = document.querySelectorAll('.tl-timemarker-content');
-
-                    if (timelineEvents.length > 0) {
-                        console.log("Eventos de la Timeline encontrados:", timelineEvents);
-
-                        timelineEvents.forEach(function(eventElement, index) {
-                            // Evitar añadir listeners de eventos repetidamente
-                            if (!eventElement.dataset.listenerAdded) {
-                                eventElement.addEventListener('click', function() {
-                                    const unique_id = data.timeline.events[index].unique_id;
-                                    console.log("Evento clicado en Timeline:", unique_id);
-
-                                    // Sincronizar con StoryMap usando el unique_id del evento
-                                    syncStoryMap(unique_id);
-                                });
-
-                                // Marcar el elemento como listener añadido
-                                eventElement.dataset.listenerAdded = true;
-                            }
-                        });
-
-                        console.log("Listeners de eventos de Timeline añadidos.");
-                        
-                        // Detener el MutationObserver después de añadir los listeners
-                        observerInstance.disconnect();
-                    }
-                });
-
-                observer.observe(timelineContainer, { childList: true});
-
-                // Evento para capturar cuando se cambia de slide en StoryMap
-                storymap.on('slidechanged', function(e) {
-                    const slideIndex = e.index;
-                    const eventIndex = slideIndex - 1; // Ajuste por el slide de introducción en StoryMap
-                    if (eventIndex >= 0) {
-                        const unique_id = data.timeline.events[eventIndex].unique_id;
-                        console.log("Sincronizando Timeline al evento:", unique_id);
-                        timeline.goToId(unique_id);
-                    }
-                });
-
-                listenersAdded = true; // Se asegura que solo se añada una vez
+    // Tus datos de eventos para StoryMapJS
+    var storyMapData = {
+      "storymap": {
+        "slides": [
+          {
+            "date": "2024-9-15",
+            "text": {
+              "headline": "Exposición de Arte Contemporáneo",
+              "text": "Una exposición de artistas emergentes que presentan sus obras de arte contemporáneo."
+            },
+            "location": {
+              "lat": 48.8566,
+              "lon": 2.3522,
+              "zoom": 5
+            },
+            "media": {
+              "url": "https://example.com/event2_image.jpg"
             }
-        });
-    </script>
+          },
+          {
+            "date": "2024-10-1",
+            "text": {
+              "headline": "Conferencia sobre Energía Sostenible",
+              "text": "Una conferencia internacional sobre el futuro de las energías renovables y la sostenibilidad."
+            },
+            "location": {
+              "lat": 40.7128,
+              "lon": -74.0060,
+              "zoom": 5
+            },
+            "media": {
+              "url": "https://example.com/event1_image.jpg"
+            }
+          },
+          {
+            "date": "2024-11-5",
+            "text": {
+              "headline": "Feria Tecnológica Anual",
+              "text": "La feria tecnológica más grande del país, donde se presentan las últimas innovaciones en tecnología."
+            },
+            "location": {
+              "lat": 37.7749,
+              "lon": -122.4194,
+              "zoom": 5
+            },
+            "media": {
+              "url": "https://example.com/event3_image.jpg"
+            }
+          },
+          {
+            "date": "2024-12-2",
+            "text": {
+              "headline": "Festival Internacional de Música",
+              "text": "Festival de música con artistas internacionales de diversos géneros."
+            },
+            "location": {
+              "lat": 34.0522,
+              "lon": -118.2437,
+              "zoom": 5
+            },
+            "media": {
+              "url": "https://example.com/event4_image.jpg"
+            }
+          }
+        ]
+      }
+    };
+
+    // Inicializar TimelineJS
+    var timelineOptions = { initial_zoom: 2 };
+    var timeline = new TL.Timeline('timeline-embed', eventsData, timelineOptions);
+
+    // Inicializar StoryMapJS
+    let storymap_options = {};
+    let storymap = new VCO.StoryMap('storymap', storyMapData,storymap_options,{
+            "change":function(e){
+                console.log("event on storymap");
+                let eventIndex = e.current_slide;
+                console.log("timeline evento go to: " + eventIndex);
+                timeline.goTo(eventIndex);
+            }
+        }
+    );
+
+    timeline.on('change', function(event) {
+        var eventIndex = timeline._getSlideIndex(event.unique_id);
+        console.log("El índice del evento es:", eventIndex);
+        storymap.goTo(eventIndex);
+    });
+
+  </script>
 </body>
 </html>
